@@ -3,7 +3,7 @@ MCP Server – Scanner API Bridge
 This MCP Server enables MCP Clients to interact with a backend Scanner API using a simple, unified interface.
 Clients can submit a SHA-256 hash of a file and receive malware reputation details aggregated from multiple vendors.
 
-🚀 Features  !!!
+ !!! 🚀 Features  !!!
 
 Accepts SHA-256 file hashes
 
