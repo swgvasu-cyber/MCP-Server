@@ -1,4 +1,2 @@
 fastmcp
 aiohttp
-pytest
-pytest-asyncio
