@@ -725,26 +725,71 @@ curl -X POST http://localhost:8000/scan/hash \
     }
 }
 
-📦 Project Structure (Example)
+📦 Project Structure
+```
 mcp-server/
-├── server.py
-├── manifest.json
+├── mcp_server/
+│   └── test.py
+├── Dockerfile
 ├── README.md
 └── requirements.txt
+```
 
 ▶️ Running the MCP Server
-python server.py
 
+## Local Development
+```bash
+pip install -r requirements.txt
+python mcp_server/test.py
+```
 
-Server defaults to:
+## Docker Deployment
 
-http://localhost:8000
+### Build the container:
+```bash
+docker build -t mcp-scanner-server .
+```
 
-🧩 Integrating with an MCP Client
+### Run the container:
+```bash
+docker run -it mcp-scanner-server
+```
 
-Your MCP Client can connect to this server and call the scan/hash endpoint by simply sending:
+### With custom backend API:
+```bash
+docker run -it -e API_BASE=http://your-backend:8000 mcp-scanner-server
+```
 
-{ "hash": "<SHA256_VALUE>" }
+### Pull from Docker Hub:
+```bash
+docker pull <your-dockerhub-username>/mcp-scanner-server:latest
+```
 
+## CI/CD Setup
 
-The MCP Server handles forwarding, parsing, and returning normalized results.
+The project includes GitHub Actions workflow for automatic Docker builds. To enable:
+
+1. Go to your GitHub repository Settings → Secrets and variables → Actions
+2. Add the following secrets:
+   - `DOCKERHUB_USERNAME`: Your Docker Hub username
+   - `DOCKERHUB_TOKEN`: Your Docker Hub access token
+3. Push to `main` branch to trigger automatic build and push to Docker Hub
+
+🧩 Usage Examples
+
+### Using with MCP Client
+
+The MCP server exposes a `scan_hash` tool that accepts a SHA-256 hash:
+
+```python
+# Example MCP Client call
+result = await client.call_tool("scan_hash", {"hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"})
+```
+
+### Response Format
+The server returns the complete backend API response including:
+- `malicious_vendors`: Count of vendors flagging as malicious
+- `suspicious_vendors`: Count of vendors flagging as suspicious  
+- `raw_json`: Full scanner results from all vendors
+
+Server defaults to: `http://localhost:8000`
